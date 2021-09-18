@@ -11,6 +11,7 @@ async function main(callback) {
     try {
       await client.connect();
       await callback(client);
+      
     } catch (err) {
       console.error(err);
       throw (new Error('Database connection failed'));

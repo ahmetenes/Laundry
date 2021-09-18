@@ -5,19 +5,17 @@ export default class Machine extends Component {
         super(props);
         this.state = {}
     }
-    setState(){
-
-    }
+    
     render() {
         const itemdata= this.props.data;
-        console.log(`item:`, itemdata);
-        const isOpen=itemdata.door==1;
+        const id =this.props.id;
+        const isOpen = itemdata.door[id] === 1;
         return (
         <div id="container" className={isOpen?"open":"close"}>
-            <p>Machine #{itemdata.sensor_data}</p>
+            <p>Machine #{id}</p>
             <ul>
-                <li key="temp">{itemdata.temperature}C</li>
-                <li key="level">{Math.round(itemdata.level*100)}%</li>
+                <li key="temp">{itemdata.temperature[id]}C</li>
+                <li key="level">{Math.round(itemdata.level[id]*100)}%</li>
             </ul>
         </div>
         )

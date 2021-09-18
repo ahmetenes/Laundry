@@ -123,12 +123,6 @@ var interval;
 var startStop = document.getElementById('start-stop');
 
 var changer = function changer() {
-  var data = {
-    temperature: 200.67,
-    level: 0.76,
-    door: false
-  };
-
   if (changeStarted) {
     clearInterval(interval);
     changeStarted = false;
@@ -137,22 +131,33 @@ var changer = function changer() {
 
   interval = setInterval(function () {
     changeStarted = true;
+    var temperature = [];
+    var level = [];
+    var door = [];
+    var machineIds = [];
 
     for (var i = 1; i <= 20; i += 1) {
-      data.temperature = Math.round(Math.random() * 100.0); // 0-100
+      temperature.push(Math.round(Math.random() * 100.0)); // 0-100
 
-      data.level = Math.round(Math.random() * 100.0) / 100.0; // already percentage
+      level.push(Math.round(Math.random() * 100.0) / 100.0); // already percentage
 
-      data.door = Math.round(Math.random()); // true-false
+      door.push(Math.round(Math.random())); // 0-1
 
-      fetch("https://6144e495411c860017d256d3.mockapi.io/data/".concat(i), {
-        method: 'PUT',
-        headers: {
-          'Content-type': 'application/json'
-        },
-        body: JSON.stringify(data)
-      });
+      machineIds.push(i);
     }
+
+    fetch('https://6144e495411c860017d256d3.mockapi.io/data/1', {
+      method: 'PUT',
+      headers: {
+        'Content-type': 'application/json'
+      },
+      body: JSON.stringify({
+        temperature: temperature,
+        level: level,
+        door: door,
+        machineIds: machineIds
+      })
+    });
   }, 2000);
 };
 
@@ -188,7 +193,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58525" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49367" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

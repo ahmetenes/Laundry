@@ -1,29 +1,28 @@
 import React, { useState, useEffect } from 'react'
 import './App.css';
 import Machine from './component/Machine'
-
+import { Header, socket } from './global/Header';
 
 function App() {
-  const [Sensors, setSensors] = useState([])
-  useEffect(() => {
-    const sse = new EventSource("http://localhost:3001/sensors");
-    function getRealtimeData(data) {
-      setSensors(data)
-    }
-    sse.onmessage= e => getRealtimeData(JSON.parse(e.data))
+
+  const [data, setData] = useState({})
   
-    sse.onerror = () => {
-      sse.close();
-    }
-    return ()=>{
-      sse.close();
-    };
+  //Works one time
+  useEffect(() => {
+    console.log(`data`, data)
+    socket.emit('initial data');
+    socket.on('get data',(sensordata)=>{
+      console.log('reading data' )
+      setData({...sensordata});
+    })
   }, []);
   return (
     <div id = "app-container">
-        {Sensors.map((sensor)=><Machine key={sensor.sensor_id} data={sensor}/>)}
+      <Header/>
+      {data.machineIds && data.machineIds.map((id)=>{return <Machine key={id} id={id} data={data}/>})}
     </div>
   )
 }
+ 
 export default App;
 
